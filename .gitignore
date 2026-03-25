@@ -1,0 +1,34 @@
+node_modules
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+
+# Hardhat files
+cache
+artifacts
+
+# Frontend
+frontend/.next
+frontend/out
+frontend/node_modules
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# Soroban
+soroban-contracts/target/
+.soroban/
+target/
