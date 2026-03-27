@@ -80,18 +80,38 @@ The following accounts have successfully interacted with the BrewBid smart contr
 ## 🚀 Key Features
 
 ### For Users
+- **Gasless Transactions**: No XLM needed for transaction fees - sponsor wallet covers all costs! 🎉
 - **Secure Bidding**: All bids secured by Soroban smart contracts
 - **Instant Refunds**: Automatic refund system when outbid
-- **Low Fees**: Minimal transaction costs on Stellar network
+- **Zero Fees**: Users pay nothing - platform covers all transaction costs
 - **Transparent**: All transactions visible on blockchain
 - **Easy to Use**: Simple wallet connection and bidding process
+- **Instant Onboarding**: Start bidding immediately without funding wallet
 
 ### Technical Highlights
+- **Gasless Transactions**: Fee Bump transactions with sponsor wallet relay
 - **Soroban Smart Contracts**: Rust-based contract with comprehensive test coverage
 - **Next.js Frontend**: Modern React framework with TypeScript
 - **Stellar SDK Integration**: Full integration with Stellar blockchain
 - **Freighter Wallet**: Seamless wallet connection and transaction signing
 - **Real-time Data**: Live auction updates every 10 seconds
+- **API Relay**: Backend endpoint for wrapping transactions in Fee Bumps
+
+---
+
+## 💰 Gasless Transactions
+
+BrewBid implements **Fee Bump transactions** to provide a gasless experience for users. The platform's sponsor wallet pays all transaction fees, allowing users to bid and withdraw refunds without needing XLM for fees.
+
+**Benefits**:
+- Users can start bidding immediately after connecting wallet
+- No need to fund wallet with XLM for transaction fees
+- Improved onboarding and conversion rates
+- Cost to platform: ~0.00021 XLM per transaction (~$0.02 per 1000 transactions)
+
+**How it works**: User signs transaction → Relay API wraps in Fee Bump → Sponsor pays fees → Transaction submitted
+
+See [GASLESS_TRANSACTIONS.md](./GASLESS_TRANSACTIONS.md) for detailed implementation guide.
 
 ---
 
