@@ -194,8 +194,14 @@ export default function AuctionUI() {
   };
 
   /**
-   * Places a bid in the auction
-   * Includes loading states and comprehensive error handling based on user feedback
+   * Places a bid in the auction using gasless transactions
+   * The sponsor wallet pays the transaction fees via Fee Bump
+   * 
+   * Flow:
+   * 1. Build and simulate transaction
+   * 2. User signs with Freighter (no fee required from user)
+   * 3. Send signed XDR to relay API
+   * 4. Relay wraps in Fee Bump and submits
    */
   const placeBid = async () => {
     if (!walletAddress || !bidAmount) return;
@@ -208,6 +214,7 @@ export default function AuctionUI() {
     
     setIsBidding(true);
     try {
+      // Step 1: Build the transaction
       const sourceAccount = await server.getAccount(walletAddress);
       const account = new Account(
         walletAddress,
@@ -230,41 +237,55 @@ export default function AuctionUI() {
         ),
       );
 
+      // Build transaction with minimal fee (sponsor will pay the actual fee)
       let tx = new TransactionBuilder(account, {
-        fee: "1000",
+        fee: "100", // Minimal fee - sponsor will cover the real cost
         networkPassphrase: NETWORK_PASSPHRASE,
       })
         .addOperation(contract.call("bid", bidderScVal, amountScVal))
         .setTimeout(TimeoutInfinite)
         .build();
 
+      // Step 2: Simulate transaction to get auth and resource requirements
       const simulatedTx = await server.simulateTransaction(tx);
       if (!simulatedTx || rpc.Api.isSimulationError(simulatedTx)) {
         throw new Error("Transaction simulation failed. Please check your bid amount and try again.");
       }
 
+      // Assemble transaction with simulation results
       tx = rpc.assembleTransaction(tx, simulatedTx).build();
       
-      // Request signature from Freighter
+      // Step 3: Request user signature from Freighter (user doesn't pay fees!)
       const signedResponse = await signTransaction(tx.toXDR(), {
         networkPassphrase: NETWORK_PASSPHRASE,
       });
       
       const signedXdr = getSignedXdr(signedResponse);
-      const res = await server.sendTransaction(
-        TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE),
-      );
       
-      if (res.status === "PENDING") {
-        setBidAmount("");
-        alert("✅ Bid placed successfully! Refreshing auction data...");
-        // Wait for transaction to be processed, then refresh
-        setTimeout(() => {
-          fetchAuctionDetails();
-        }, 3000);
-      } else {
-        throw new Error(`Transaction failed with status: ${res.status}`);
+      // Step 4: Send signed transaction to relay API for fee bump
+      const relayResponse = await fetch("/api/relay", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ signedXdr }),
+      });
+
+      const relayData = await relayResponse.json();
+
+      if (!relayResponse.ok || !relayData.success) {
+        throw new Error(relayData.error || "Failed to relay transaction");
       }
+
+      // Success! Transaction was submitted with sponsor paying fees
+      setBidAmount("");
+      alert(`✅ Bid placed successfully! (Gasless - fees paid by sponsor)\nTransaction: ${relayData.hash}`);
+      
+      // Wait for transaction to be processed, then refresh
+      setTimeout(() => {
+        fetchAuctionDetails();
+      }, 3000);
+
     } catch (error: any) {
       console.error("Bid placement error:", error);
       
@@ -277,6 +298,8 @@ export default function AuctionUI() {
         alert("❌ This auction has ended. No more bids can be placed.");
       } else if (error.message?.includes("insufficient balance")) {
         alert("❌ Insufficient XLM balance. Please fund your wallet and try again.");
+      } else if (error.message?.includes("Sponsor wallet not configured")) {
+        alert("❌ Gasless transactions are not configured. Please contact support.");
       } else {
         alert(`❌ Bid failed: ${error.message || "Unknown error. Please try again."}`);
       }
@@ -286,13 +309,14 @@ export default function AuctionUI() {
   };
 
   /**
-   * Withdraws refund for outbid users
-   * Includes loading states and error handling
+   * Withdraws refund for outbid users using gasless transactions
+   * The sponsor wallet pays the transaction fees via Fee Bump
    */
   const withdrawRefund = async () => {
     if (!walletAddress) return;
     setIsBidding(true);
     try {
+      // Step 1: Build the transaction
       const sourceAccount = await server.getAccount(walletAddress);
       const account = new Account(
         walletAddress,
@@ -300,36 +324,54 @@ export default function AuctionUI() {
       );
       const contract = new Contract(CONTRACT_ID);
       const userScVal = safeScVal(new Address(walletAddress).toScVal());
+      
+      // Build transaction with minimal fee (sponsor will pay the actual fee)
       let tx = new TransactionBuilder(account, {
-        fee: "1000",
+        fee: "100", // Minimal fee - sponsor will cover the real cost
         networkPassphrase: NETWORK_PASSPHRASE,
       })
         .addOperation(contract.call("withdraw", userScVal))
         .setTimeout(TimeoutInfinite)
         .build();
+      
+      // Step 2: Simulate transaction
       const simulatedTx = await server.simulateTransaction(tx);
       if (!simulatedTx || rpc.Api.isSimulationError(simulatedTx)) {
         throw new Error("Withdrawal simulation failed. Please try again.");
       }
       
+      // Assemble transaction with simulation results
       tx = rpc.assembleTransaction(tx, simulatedTx).build();
+      
+      // Step 3: Request user signature from Freighter (user doesn't pay fees!)
       const signedResponse = await signTransaction(tx.toXDR(), {
         networkPassphrase: NETWORK_PASSPHRASE,
       });
       const signedXdr = getSignedXdr(signedResponse);
-      const res = await server.sendTransaction(
-        TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE),
-      );
       
-      if (res.status === "PENDING") {
-        alert("✅ Refund withdrawn successfully!");
-        // Refresh auction data to update refund balance
-        setTimeout(() => {
-          fetchAuctionDetails();
-        }, 3000);
-      } else {
-        throw new Error(`Withdrawal failed with status: ${res.status}`);
+      // Step 4: Send signed transaction to relay API for fee bump
+      const relayResponse = await fetch("/api/relay", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ signedXdr }),
+      });
+
+      const relayData = await relayResponse.json();
+
+      if (!relayResponse.ok || !relayData.success) {
+        throw new Error(relayData.error || "Failed to relay transaction");
       }
+
+      // Success! Transaction was submitted with sponsor paying fees
+      alert(`✅ Refund withdrawn successfully! (Gasless - fees paid by sponsor)\nTransaction: ${relayData.hash}`);
+      
+      // Refresh auction data to update refund balance
+      setTimeout(() => {
+        fetchAuctionDetails();
+      }, 3000);
+
     } catch (error: any) {
       console.error("Withdrawal error:", error);
       
