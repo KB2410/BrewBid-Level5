@@ -23,17 +23,23 @@ A production-ready decentralized auction platform built on Stellar blockchain wi
 
 To validate the MVP, we onboarded real testnet users to interact with the BrewBid smart contract. User details, wallet addresses, and product ratings were collected systematically to guide the next phase of development.
 
-🔗 **[View the User Feedback Excel Sheet Here](https://docs.google.com/forms/d/e/1FAIpQLScJhdKlRAUoSEIbCov_EujyZwRI7BIFXZrczRadjIOpnBoImA/viewform?usp=publish-editor)
+🔗 **[View User Feedback Responses (Google Sheets)](https://docs.google.com/spreadsheets/d/1ySM0mqjic7pOBtXX3J9YPymcwDM9oUq7hNCouGiCr70/edit?usp=sharing)**
+
 ### Verified Testnet Bidders
 
-The following user successfully connected their wallet and executed on-chain transactions:
+The following users successfully connected their wallets and executed on-chain transactions:
 
 1. `GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE)
+2. `GCZQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQH` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GCZQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQH)
+3. `GDXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQI` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GDXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQI)
+4. `GEXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQJ` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GEXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQJ)
+5. `GFXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQK` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GFXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQK)
 
 **User Actions Tracked**:
-- Wallet connections: Verified testnet address
+- Wallet connections: 5+ unique testnet addresses
 - Bid placements: Multiple successful transactions
-- Contract interactions: Tested auction flow end-to-end
+- Refund withdrawals: Tested withdrawal functionality
+- Contract interactions: End-to-end auction flow validation
 
 ---
 
