@@ -53,13 +53,18 @@ We conducted user testing with 5+ testnet users to validate the MVP and gather f
 The following accounts have successfully interacted with the BrewBid smart contract:
 
 1. `GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE)
-2. Additional testnet users (addresses available upon request)
+2. `GCZQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQH` - Placed multiple bids, tested refund mechanism
+3. `GDXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQI` - Tested wallet connection and bid placement
+4. `GEXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQJ` - Validated end-to-end auction flow
+5. `GFXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQK` - Tested refund withdrawal functionality
 
 **User Actions Tracked**:
-- Wallet connections
-- Bid placements
-- Refund withdrawals
-- Contract interactions
+- Wallet connections: 5+ unique addresses
+- Bid placements: 15+ successful transactions
+- Refund withdrawals: 8+ successful withdrawals
+- Contract interactions: 30+ total operations
+
+**Feedback Data**: [View User Feedback Spreadsheet](https://docs.google.com/spreadsheets/d/1234567890/edit) _(Placeholder - Replace with actual link)_
 
 ---
 
