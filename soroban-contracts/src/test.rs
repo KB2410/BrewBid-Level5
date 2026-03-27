@@ -1,8 +1,29 @@
 #![cfg(test)]
+//! # BrewBid Auction Contract Test Suite
+//! 
+//! Comprehensive tests covering:
+//! - Complete auction flow (initialize → bid → outbid → withdraw → end)
+//! - Edge cases (low bids, expired auctions)
+//! - Refund mechanism validation
+//! - Security scenarios (reentrancy protection via pull pattern)
 
 use super::*;
 use soroban_sdk::{testutils::{Address as _, Ledger}, Address, Env, String, token};
 
+/// Tests the complete auction lifecycle with multiple bidders
+/// 
+/// Flow:
+/// 1. Initialize auction with 1-hour duration
+/// 2. Bidder1 places initial bid of 100
+/// 3. Bidder2 outbids with 200
+/// 4. Bidder1 withdraws refund of 100
+/// 5. Auction ends and seller receives winning bid
+/// 
+/// Validates:
+/// - Proper state transitions
+/// - Refund allocation for outbid users
+/// - Token transfers at each step
+/// - Final balance reconciliation
 #[test]
 fn test_auction_flow() {
     let env = Env::default();
@@ -77,6 +98,12 @@ fn test_auction_flow() {
     assert_eq!(token_base_client.balance(&contract_id), 0);
 }
 
+/// Tests that bids lower than or equal to current highest bid are rejected
+/// 
+/// Security validation:
+/// - Prevents bid manipulation
+/// - Ensures auction integrity
+/// - Validates proper error handling
 #[test]
 #[should_panic(expected = "Bid must be higher than the current highest bid")]
 fn test_low_bid_fails() {
@@ -102,6 +129,12 @@ fn test_low_bid_fails() {
     client.bid(&bidder, &50); // Should panic
 }
 
+/// Tests that bids cannot be placed after auction expiration
+/// 
+/// Time-based validation:
+/// - Ensures auction respects end_time
+/// - Prevents late bidding exploits
+/// - Validates ledger timestamp checks
 #[test]
 #[should_panic(expected = "Auction has already ended")]
 fn test_bid_after_end_fails() {
