@@ -162,7 +162,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Check response status
-    if (response.status === "PENDING" || response.status === "SUCCESS") {
+    // Valid statuses: "PENDING", "DUPLICATE", "TRY_AGAIN_LATER", "ERROR"
+    if (response.status === "PENDING" || response.status === "DUPLICATE") {
       return NextResponse.json({
         success: true,
         hash: response.hash,
@@ -182,6 +183,17 @@ export async function POST(request: NextRequest) {
           status: response.status,
         },
         { status: 400 }
+      );
+    } else if (response.status === "TRY_AGAIN_LATER") {
+      // Network is busy, client should retry
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: "Network is busy. Please try again in a moment.",
+          hash: response.hash,
+          status: response.status,
+        },
+        { status: 503 }
       );
     } else {
       // Unexpected status
