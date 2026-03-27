@@ -12,11 +12,13 @@ The core logic resides in a Soroban smart contract that handles:
 - **Refund Logic**: Uses a **Pull Mechanism** (`Refund(Address)` in `persistent` storage) to allow outbid users to reclaim their XLM, preventing "gas exhaustion" or "failure to send" attacks.
 
 ### 2. Frontend (Next.js & TypeScript)
-A modern reactive interface that interacts with the blockchain:
-- **Provider**: Connects to Stellar Testnet via `@stellar/stellar-sdk`.
-- **Wallet**: Integrated with the Freighter Browser Extension for secure signing.
-- **Real-time Engine**: Uses RPC Event Polling and Transaction Simulation results to update the UI (Highest Bid, Time Remaining) without page refreshes.
-- **XDR Serialization**: Implements a custom "XDR Washer" to handle object proxying issues specific to Next.js development environments.
+A premium reactive interface built with modular components and modern styling:
+- **Modular Components**: Uses a fragmented architecture (`AuctionCard`, `LiveFeed`, `BidForm`, `Header`) for better maintainability.
+- **Visual Excellence**: Implemented with Tailwind CSS 4, featuring glassmorphism and custom radial gradients.
+- **Motion Engine**: Leverages `framer-motion` for fluid state transitions and transaction feedback.
+- **Provider**: Connects to Stellar Testnet via `@stellar/stellar-sdk` using RPC polling.
+- **Wallet**: Integrated with Freighter for transaction signing and account discovery.
+- **XDR Washer**: Sanitizes ledger objects to prevent Next.js serialization crashes.
 
 ## 🔄 Data & Logic Flow
 

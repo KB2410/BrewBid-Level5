@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "BrewBid - Stellar Auction",
-  description: "Real-time decentralized auction platform built on the Stellar network",
+  description:
+    "Real-time decentralized auction platform built on the Stellar network",
 };
 
 export default function RootLayout({

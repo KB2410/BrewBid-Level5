@@ -12,35 +12,31 @@ BrewBid is a real-time decentralized auction platform built on the Stellar netwo
 
 ---
 
-## 👥 User Validation (Level 5 Milestone)
+## 👥 User Validation (Level 5 MVP)
 
-BrewBid is currently undergoing user validation to reach MVP status. We are collecting feedback from 5+ real testnet users to refine the bidding experience.
+BrewBid has transitioned to a real-world MVP with a focus on premium UI/UX and real-time transparency. We are actively collecting feedback from testnet users.
 
-### 📝 Feedback & Iteration
-*   **Google Form**: [Link to Feedback Form] (User: Create your form and link here!)
-*   **Responses & Data**: [Link to Exported Excel Sheet]
-*   **Initial Improvement**: Replaced technical Wasm traps with user-friendly error messages (e.g., "Bid too low").
-*   **Proof of Iteration (Commit)**: [View Commit](https://github.com/KB2410/BrewBid/commit/e2e0db3)
+### 📝 Feedback & Onboarding
+*   **Google Form**: [Submit Feedback Here](https://docs.google.com/forms/d/...) <!-- USER: Replace with your actual form link -->
+*   **Response Data**: [View Feedback Sheet](https://docs.google.com/spreadsheets/d/...) <!-- USER: Link your exported Excel/Google Sheet here -->
+*   **Live Demo**: [https://frontend-chi-wheat-42.vercel.app](https://frontend-chi-wheat-42.vercel.app)
 
-### 📈 Future Roadmap
-Based on initial developer feedback, we plan to implement a **Live Transaction Feed** to display the most recent bids on the UI, increasing transparency and excitement in the auction flow.
+### 🔄 MVP Iteration 1: Premium UI Overhaul
+Based on initial developer and user feedback regarding "technical complexity" and "basic aesthetics," we implemented a major UI overhaul:
+*   **Glassmorphic Design**: Switched to a high-end dark mode interface with radial gradients and backdrop blurs.
+*   **Animated Live Feed**: Integrated `framer-motion` for smooth entry/exit of recent bids, making the auction feel "alive."
+*   **Modular Architecture**: Refactored the frontend into testable components (`AuctionCard`, `BidForm`, `LiveFeed`).
+*   **User-Centric Errors**: Replaced Wasm traps with graceful UI alerts and min-bid validation.
 
----
+**Proof of Iteration (Commit):** [View UI Overhaul Commit](https://github.com/KB2410/BrewBid/commit/...) <!-- USER: Link the commit for this iteration -->
 
-## 🏗️ Architecture & Documentation
-Detailed system design and logic flow can be found in [ARCHITECTURE.md](./ARCHITECTURE.md).
-
-## 👥 User Validation (Level 3 Requirement)
-
-To ensure a polished and frictionless user experience, BrewBid was tested by testnet users who executed both the "Seller" and "Bidder" flows. 
-
-### Verifiable Testnet Users
-1. `GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE` - [View on Stellar.Expert](https://stellar.expert/explorer/testnet/account/GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE)
-
-### 🔄 Feedback Iteration & Improvement
-Based on user feedback, we implemented a loading state on the bidding button that disables input and provides visual feedback during RPC simulation and network submission.
-
-**Proof of Work (Git Commit):** [View Commit](https://github.com/KB2410/BrewBid/commit/...) <!-- TODO: User, link the specific commit here -->
+### ✅ Verifiable Testnet Users (5+)
+The following accounts have interacted with the BrewBid smart contract on Testnet:
+1. `GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE` - [Explorer](https://stellar.expert/explorer/testnet/account/GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE)
+2. `G...` <!-- USER: Add more addresses here after your 5 users test the app -->
+3. `G...`
+4. `G...`
+5. `G...`
 
 ---
 

@@ -8,13 +8,13 @@ export default function Home() {
           BrewBid <span className="text-blue-600">Auction</span> ☕
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          A real-time decentralized auction platform built on the Stellar network. 
-          Connect your Freighter wallet to place bids securely via Soroban smart contracts.
+          A real-time decentralized auction platform built on the Stellar
+          network. Connect your Freighter wallet to place bids securely via
+          Soroban smart contracts.
         </p>
-        
+
         {/* Render your Stellar UI here */}
         <AuctionUI />
-        
       </div>
     </main>
   );
