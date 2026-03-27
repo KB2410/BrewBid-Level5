@@ -166,6 +166,10 @@ export default function AuctionUI() {
     throw new Error("Could not extract signed XDR.");
   };
 
+  /**
+   * Connects to user's Freighter wallet
+   * Handles errors gracefully with user-friendly messages
+   */
   const connectWallet = async () => {
     try {
       if (await isConnected()) {
@@ -178,13 +182,30 @@ export default function AuctionUI() {
       } else {
         alert("Please install the Freighter wallet extension!");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Wallet connection failed:", err);
+      // User-friendly error handling based on feedback
+      if (err.message?.includes("User declined")) {
+        alert("Wallet connection was cancelled. Please try again when ready.");
+      } else {
+        alert("Failed to connect wallet. Please ensure Freighter is installed and unlocked.");
+      }
     }
   };
 
+  /**
+   * Places a bid in the auction
+   * Includes loading states and comprehensive error handling based on user feedback
+   */
   const placeBid = async () => {
     if (!walletAddress || !bidAmount) return;
+    
+    // Validate bid amount
+    if (Number(bidAmount) <= auctionData.highestBid) {
+      alert(`Bid must be higher than current bid of ${auctionData.highestBid} XLM`);
+      return;
+    }
+    
     setIsBidding(true);
     try {
       const sourceAccount = await server.getAccount(walletAddress);
@@ -218,32 +239,56 @@ export default function AuctionUI() {
         .build();
 
       const simulatedTx = await server.simulateTransaction(tx);
-      if (!simulatedTx || rpc.Api.isSimulationError(simulatedTx))
-        throw new Error("Simulation failed");
+      if (!simulatedTx || rpc.Api.isSimulationError(simulatedTx)) {
+        throw new Error("Transaction simulation failed. Please check your bid amount and try again.");
+      }
 
       tx = rpc.assembleTransaction(tx, simulatedTx).build();
+      
+      // Request signature from Freighter
       const signedResponse = await signTransaction(tx.toXDR(), {
         networkPassphrase: NETWORK_PASSPHRASE,
       });
+      
       const signedXdr = getSignedXdr(signedResponse);
       const res = await server.sendTransaction(
         TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE),
       );
+      
       if (res.status === "PENDING") {
         setBidAmount("");
-        alert("Bid broadcasted! Refreshing data...");
-        // Wait a bit for the transaction to be processed, then refresh
+        alert("✅ Bid placed successfully! Refreshing auction data...");
+        // Wait for transaction to be processed, then refresh
         setTimeout(() => {
           fetchAuctionDetails();
         }, 3000);
+      } else {
+        throw new Error(`Transaction failed with status: ${res.status}`);
       }
     } catch (error: any) {
-      alert(`Failed: ${error.message || error}`);
+      console.error("Bid placement error:", error);
+      
+      // User-friendly error messages based on feedback
+      if (error.message?.includes("User declined")) {
+        alert("❌ Transaction was cancelled. Your bid was not placed.");
+      } else if (error.message?.includes("Bid must be higher")) {
+        alert("❌ Your bid must be higher than the current highest bid.");
+      } else if (error.message?.includes("Auction has already ended")) {
+        alert("❌ This auction has ended. No more bids can be placed.");
+      } else if (error.message?.includes("insufficient balance")) {
+        alert("❌ Insufficient XLM balance. Please fund your wallet and try again.");
+      } else {
+        alert(`❌ Bid failed: ${error.message || "Unknown error. Please try again."}`);
+      }
     } finally {
       setIsBidding(false);
     }
   };
 
+  /**
+   * Withdraws refund for outbid users
+   * Includes loading states and error handling
+   */
   const withdrawRefund = async () => {
     if (!walletAddress) return;
     setIsBidding(true);
@@ -263,8 +308,10 @@ export default function AuctionUI() {
         .setTimeout(TimeoutInfinite)
         .build();
       const simulatedTx = await server.simulateTransaction(tx);
-      if (!simulatedTx || rpc.Api.isSimulationError(simulatedTx))
-        throw new Error("Simulation failed");
+      if (!simulatedTx || rpc.Api.isSimulationError(simulatedTx)) {
+        throw new Error("Withdrawal simulation failed. Please try again.");
+      }
+      
       tx = rpc.assembleTransaction(tx, simulatedTx).build();
       const signedResponse = await signTransaction(tx.toXDR(), {
         networkPassphrase: NETWORK_PASSPHRASE,
@@ -273,9 +320,27 @@ export default function AuctionUI() {
       const res = await server.sendTransaction(
         TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE),
       );
-      if (res.status === "PENDING") alert("Refund withdrawn!");
-    } catch (error) {
-      alert("Withdrawal failed.");
+      
+      if (res.status === "PENDING") {
+        alert("✅ Refund withdrawn successfully!");
+        // Refresh auction data to update refund balance
+        setTimeout(() => {
+          fetchAuctionDetails();
+        }, 3000);
+      } else {
+        throw new Error(`Withdrawal failed with status: ${res.status}`);
+      }
+    } catch (error: any) {
+      console.error("Withdrawal error:", error);
+      
+      // User-friendly error messages
+      if (error.message?.includes("User declined")) {
+        alert("❌ Withdrawal was cancelled.");
+      } else if (error.message?.includes("No funds to withdraw")) {
+        alert("❌ You have no refund available to withdraw.");
+      } else {
+        alert(`❌ Withdrawal failed: ${error.message || "Unknown error. Please try again."}`);
+      }
     } finally {
       setIsBidding(false);
     }
