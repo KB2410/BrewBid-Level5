@@ -1,3 +1,17 @@
+/**
+ * Auction UI Component
+ * 
+ * Main interface for interacting with the BrewBid auction smart contract.
+ * Handles wallet connection, bid placement, refund withdrawal, and real-time data updates.
+ * 
+ * Features:
+ * - Freighter wallet integration
+ * - Real-time auction data polling (10-second intervals)
+ * - Bid transaction construction and signing
+ * - Automatic refund detection and withdrawal
+ * - Professional UI with loading states and error handling
+ */
+
 "use client";
 
 import {
@@ -18,12 +32,15 @@ import {
 } from "@stellar/stellar-sdk";
 import { useEffect, useState } from "react";
 
-// ⚠️ PASTE YOUR DEPLOYED CONTRACT ID HERE
+// Contract configuration
 const CONTRACT_ID = "CCLI6FFDYPVD7E6A45Q6QKHADRAOJTQXE35H5KQGQMYJTFJECXJQNVCV";
 const RPC_URL = "https://soroban-testnet.stellar.org:443";
 const NETWORK_PASSPHRASE = Networks.TESTNET;
 
-// 🚨 THE WASHER: Sanitizes objects to prevent the Next.js e.switch crash
+/**
+ * Sanitizes ScVal objects to prevent Next.js serialization crashes
+ * Converts to XDR and back to ensure clean object structure
+ */
 const safeScVal = (scval: any) => {
   if (!scval) return scval;
   try {
@@ -36,7 +53,10 @@ const safeScVal = (scval: any) => {
   }
 };
 
-// Extract values safely
+/**
+ * Extracts values from Stellar SDK ScVal objects
+ * Handles i128, u64, strings, and addresses with proper BigInt conversion
+ */
 const extractScValValue = (val: any): any => {
   if (!val) return null;
   
