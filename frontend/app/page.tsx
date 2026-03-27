@@ -3,6 +3,11 @@
  * 
  * Main entry point for the auction platform.
  * Renders the hero section and auction UI component.
+ * 
+ * Features:
+ * - Gasless transactions (no XLM needed for fees!)
+ * - Real-time auction updates
+ * - Secure Soroban smart contracts
  */
 
 import AuctionUI from "./components/AuctionUI";
@@ -17,7 +22,7 @@ export default function Home() {
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
           A real-time decentralized auction platform built on the Stellar
           network. Connect your Freighter wallet to place bids securely via
-          Soroban smart contracts.
+          Soroban smart contracts. <strong>No XLM needed for fees!</strong>
         </p>
 
         {/* Main auction interface */}
