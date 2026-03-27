@@ -1,3 +1,10 @@
+/**
+ * Root Layout Component
+ * 
+ * Provides global layout structure, fonts, and metadata for the application.
+ * Includes Vercel Speed Insights for performance monitoring.
+ */
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -16,7 +23,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "BrewBid - Stellar Auction",
   description:
-    "Real-time decentralized auction platform built on the Stellar network",
+    "Real-time decentralized auction platform built on the Stellar network with Soroban smart contracts",
 };
 
 export default function RootLayout({

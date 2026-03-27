@@ -1,3 +1,10 @@
+/**
+ * BrewBid Home Page
+ * 
+ * Main entry point for the auction platform.
+ * Renders the hero section and auction UI component.
+ */
+
 import AuctionUI from "./components/AuctionUI";
 
 export default function Home() {
@@ -13,7 +20,7 @@ export default function Home() {
           Soroban smart contracts.
         </p>
 
-        {/* Render your Stellar UI here */}
+        {/* Main auction interface */}
         <AuctionUI />
       </div>
     </main>
