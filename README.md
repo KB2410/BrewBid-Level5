@@ -23,23 +23,17 @@ A production-ready decentralized auction platform built on Stellar blockchain wi
 
 To validate the MVP, we onboarded real testnet users to interact with the BrewBid smart contract. User details, wallet addresses, and product ratings were collected systematically to guide the next phase of development.
 
-🔗 **[View the User Feedback Excel Sheet Here](https://docs.google.com/spreadsheets/d/1234567890/edit)** _(Placeholder - Replace with actual link)_
-
+🔗 **[View the User Feedback Excel Sheet Here](https://docs.google.com/forms/d/e/1FAIpQLScJhdKlRAUoSEIbCov_EujyZwRI7BIFXZrczRadjIOpnBoImA/viewform?usp=publish-editor)
 ### Verified Testnet Bidders
 
-The following users successfully connected their wallets and executed on-chain transactions:
+The following user successfully connected their wallet and executed on-chain transactions:
 
 1. `GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE)
-2. `GCZQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQH` - Placed multiple bids, tested refund mechanism
-3. `GDXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQI` - Tested wallet connection and bid placement
-4. `GEXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQJ` - Validated end-to-end auction flow
-5. `GFXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQK` - Tested refund withdrawal functionality
 
 **User Actions Tracked**:
-- Wallet connections: 5+ unique addresses
-- Bid placements: 15+ successful transactions
-- Refund withdrawals: 8+ successful withdrawals
-- Contract interactions: 30+ total operations
+- Wallet connections: Verified testnet address
+- Bid placements: Multiple successful transactions
+- Contract interactions: Tested auction flow end-to-end
 
 ---
 
@@ -67,10 +61,6 @@ Instead of requiring users to hold XLM, the Next.js frontend now delegates the t
 - Dramatically improved user onboarding experience
 
 * **Git Commit Link for this Improvement:** [View the Gasless Relayer Implementation here](https://github.com/KB2410/BrewBid-Level5/commit/7e90b5a)
-
-**Additional Documentation**:
-- [Gasless Transactions Guide](./GASLESS_TRANSACTIONS.md) - Comprehensive implementation details
-- [Quick Setup Guide](./GASLESS_SETUP_GUIDE.md) - 5-minute setup instructions
 
 ---
 
@@ -117,7 +107,7 @@ BrewBid implements **Fee Bump transactions** to provide a gasless experience for
 
 **How it works**: User signs transaction → Relay API wraps in Fee Bump → Sponsor pays fees → Transaction submitted
 
-See [GASLESS_TRANSACTIONS.md](./GASLESS_TRANSACTIONS.md) for detailed implementation guide.
+For detailed implementation guide, see [GASLESS_TRANSACTIONS.md](./GASLESS_TRANSACTIONS.md)
 
 ---
 
@@ -267,12 +257,6 @@ All tests passing: ![Tests Passing](./tests-passing-output.png)
 - [ ] Mainnet deployment
 - [ ] NFT auction support
 - [ ] Dutch auction mechanism
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ---
 
