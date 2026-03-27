@@ -1,20 +1,38 @@
 #![no_std]
+//! # BrewBid Auction Smart Contract
+//! 
+//! A secure, decentralized auction platform built on Stellar's Soroban.
+//! 
+//! ## Features
+//! - Time-bound auctions with automatic expiration
+//! - Secure bid escrow with automatic refunds for outbid users
+//! - Pull-based refund mechanism to prevent reentrancy attacks
+//! - Event emission for frontend indexing and real-time updates
+//! 
+//! ## Security Considerations
+//! - Uses pull pattern for refunds to prevent reentrancy
+//! - Checks-Effects-Interactions pattern for state updates
+//! - Authorization required for all state-changing operations
+
 use soroban_sdk::{
     contract, contractimpl, contracttype, token, Address, Env, String, symbol_short
 };
 
 mod test;
 
-// Define the keys used to store state on the ledger
+/// Storage keys for auction state management
+/// 
+/// Uses Soroban's instance storage for active auction data and
+/// persistent storage for user refund balances to optimize costs
 #[contracttype]
 pub enum DataKey {
-    Seller,           // Address of the person selling the item
-    ItemName,         // Name/ID of the item being auctioned
-    Token,            // Address of the token used for bidding (e.g., native XLM)
-    EndTime,          // Unix timestamp for when the auction ends
-    HighestBidder,    // Address of the current highest bidder
-    HighestBid,       // Amount of the current highest bid
-    Refund(Address),  // Mapping to store balances for outbid users (Pull pattern)
+    Seller,           // Address of the auction creator/seller
+    ItemName,         // Human-readable name of the auctioned item
+    Token,            // Token contract address (typically native XLM)
+    EndTime,          // Unix timestamp when bidding closes
+    HighestBidder,    // Current winning bidder's address
+    HighestBid,       // Current winning bid amount in stroops
+    Refund(Address),  // Per-user refund balance (pull pattern for security)
 }
 
 #[contract]
@@ -22,7 +40,21 @@ pub struct BrewBidAuction;
 
 #[contractimpl]
 impl BrewBidAuction {
-    /// Initializes the auction. Can only be called once.
+    /// Initializes a new auction with the specified parameters.
+    /// 
+    /// # Arguments
+    /// * `seller` - Address of the auction creator who will receive winning bid
+    /// * `item_name` - Human-readable name/description of the item
+    /// * `token` - Token contract address for bidding (typically native XLM)
+    /// * `duration_seconds` - How long the auction runs from initialization
+    /// 
+    /// # Security
+    /// - Requires seller authorization
+    /// - Can only be called once per contract instance
+    /// - Emits AuctionCreated event for frontend tracking
+    /// 
+    /// # Panics
+    /// - If auction is already initialized
     pub fn initialize(
         env: Env,
         seller: Address,
@@ -55,7 +87,28 @@ impl BrewBidAuction {
         );
     }
 
-    /// Places a bid. Locks the funds in the contract.
+    /// Places a bid in the auction, locking funds in escrow.
+    /// 
+    /// # Arguments
+    /// * `bidder` - Address placing the bid
+    /// * `amount` - Bid amount in stroops (1 XLM = 10,000,000 stroops)
+    /// 
+    /// # Behavior
+    /// 1. Validates auction is still active
+    /// 2. Validates bid is higher than current highest
+    /// 3. Transfers funds from bidder to contract
+    /// 4. Allocates refund for previous highest bidder
+    /// 5. Updates highest bidder and bid amount
+    /// 6. Emits BidPlaced event
+    /// 
+    /// # Security
+    /// - Requires bidder authorization
+    /// - Uses pull pattern for refunds (no automatic transfers)
+    /// - Checks-Effects-Interactions pattern
+    /// 
+    /// # Panics
+    /// - If auction has ended
+    /// - If bid is not higher than current highest bid
     pub fn bid(env: Env, bidder: Address, amount: i128) {
         bidder.require_auth();
 
@@ -92,7 +145,18 @@ impl BrewBidAuction {
         );
     }
 
-    /// Allows outbid users to withdraw their locked funds securely.
+    /// Allows outbid users to withdraw their refundable balance.
+    /// 
+    /// # Arguments
+    /// * `user` - Address requesting withdrawal
+    /// 
+    /// # Security
+    /// - Requires user authorization
+    /// - Zeroes balance BEFORE transfer (reentrancy protection)
+    /// - Pull pattern: users must explicitly withdraw
+    /// 
+    /// # Panics
+    /// - If user has no refundable balance
     pub fn withdraw(env: Env, user: Address) {
         user.require_auth();
 
@@ -110,7 +174,15 @@ impl BrewBidAuction {
         token_client.transfer(&env.current_contract_address(), &user, &refund_amount);
     }
 
-    /// Ends the auction and transfers the winning bid to the seller.
+    /// Ends the auction and transfers winning bid to seller.
+    /// 
+    /// # Behavior
+    /// - Can only be called after auction end time
+    /// - Transfers highest bid to seller if any bids were placed
+    /// - Emits AuctionEnded event
+    /// 
+    /// # Panics
+    /// - If auction is still active
     pub fn end_auction(env: Env) {
         let end_time: u64 = env.storage().instance().get(&DataKey::EndTime).unwrap();
         if env.ledger().timestamp() < end_time {
