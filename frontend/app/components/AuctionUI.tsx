@@ -33,7 +33,7 @@ import {
 import { useEffect, useState } from "react";
 
 // Contract configuration
-const CONTRACT_ID = "CCLI6FFDYPVD7E6A45Q6QKHADRAOJTQXE35H5KQGQMYJTFJECXJQNVCV";
+const CONTRACT_ID = "CCYN4CDGV2XMCCC5BZM5RNUFHGKMXJOGMCMB5B2665VU36PDQEU3SDEZ";
 const RPC_URL = "https://soroban-testnet.stellar.org:443";
 const NETWORK_PASSPHRASE = Networks.TESTNET;
 
@@ -206,14 +206,26 @@ export default function AuctionUI() {
    * 4. Relay wraps in Fee Bump and submits
    */
   const placeBid = async () => {
-    if (!walletAddress || !bidAmount) return;
+    console.log("=== Place Bid Clicked ===");
+    console.log("Wallet Address:", walletAddress);
+    console.log("Bid Amount:", bidAmount);
+    console.log("Current Highest Bid:", auctionData.highestBid);
+    console.log("Is Bidding:", isBidding);
+    console.log("Status:", status);
+    
+    if (!walletAddress || !bidAmount) {
+      console.log("❌ Early return: Missing wallet or bid amount");
+      return;
+    }
     
     // Validate bid amount
     if (Number(bidAmount) <= auctionData.highestBid) {
+      console.log("❌ Bid too low");
       alert(`Bid must be higher than current bid of ${auctionData.highestBid} XLM`);
       return;
     }
     
+    console.log("✅ Validation passed, starting bid process...");
     setIsBidding(true);
     try {
       // Step 1: Build the transaction
@@ -753,7 +765,10 @@ export default function AuctionUI() {
                 </div>
 
                 <button
-                  onClick={placeBid}
+                  onClick={() => {
+                    console.log("🔘 Place Bid button clicked!");
+                    placeBid();
+                  }}
                   disabled={isBidding || !walletAddress || status === "ended"}
                   className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
                 >

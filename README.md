@@ -148,9 +148,9 @@ This innovation positions BrewBid as a **next-generation auction platform** that
 
 ## 🔗 Deployment Links
 
-* **Contract ID**: `CCLI6FFDYPVD7E6A45Q6QKHADRAOJTQXE35H5KQGQMYJTFJECXJQNVCV` (Stellar Testnet)
+* **Contract ID**: `CCYN4CDGV2XMCCC5BZM5RNUFHGKMXJOGMCMB5B2665VU36PDQEU3SDEZ` (Stellar Testnet)
 * **Live Frontend**: [https://frontend-chi-wheat-42.vercel.app](https://frontend-chi-wheat-42.vercel.app)
-* **Demo Video**: [Watch Demo](https://drive.google.com/file/d/1BwanzgiJ36qMccIvlhk1UjBdTJTPGKyE/view?usp=sharing)
+* **Demo Video**: [Watch Demo](https://drive.google.com/file/d/1QsBW0Hxyw3PyEQDZPJbOWiHlDuN90RTV/view?usp=sharing)
 * **Test Results**: ![Tests Passing](./tests-passing-output.png)
 
 ---
@@ -511,7 +511,7 @@ npm install
 #### 3. Configure Environment
 Create a `.env.local` file in the `frontend` directory:
 ```env
-NEXT_PUBLIC_CONTRACT_ID=CCLI6FFDYPVD7E6A45Q6QKHADRAOJTQXE35H5KQGQMYJTFJECXJQNVCV
+NEXT_PUBLIC_CONTRACT_ID=CCYN4CDGV2XMCCC5BZM5RNUFHGKMXJOGMCMB5B2665VU36PDQEU3SDEZ
 NEXT_PUBLIC_RPC_URL=https://soroban-testnet.stellar.org:443
 ```
 
