@@ -40,6 +40,7 @@ After onboarding our initial 5 users, our feedback loop identified a critical pa
 
 To solve this, we implemented a **Fee-Bump Relayer**.
 
+  * **Git Commit:** [View Gasless Implementation](https://github.com/KB2410/BrewBid-Level5/commit/7e90b5a)
   * **The User Experience:** Connect wallet → Click "Bid" → Sign (0 XLM cost).
   * **The Backend:** A Next.js API route wraps the user's transaction and sponsors the network fee using a platform treasury wallet.
   * **The Result:** Time-to-onboard dropped from 10 minutes (finding a faucet) to **under 30 seconds**.
