@@ -31,6 +31,10 @@ To validate the MVP, we onboarded real testnet users to interact with the BrewBi
 The following users successfully connected their wallets and executed on-chain transactions:
 
 1. `GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE)
+2. `GBF6GHHJ575YE2P2XGVIM3PLMTOCTFHXGEVMWLMV523MY4PXN6XTNHK5` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GBF6GHHJ575YE2P2XGVIM3PLMTOCTFHXGEVMWLMV523MY4PXN6XTNHK5)
+3. `GDOI3HVQ7DCWEM62G2V5YFOMXV77JRTYYSSMI3UFBUTIYWD6BPOKPZV3` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GDOI3HVQ7DCWEM62G2V5YFOMXV77JRTYYSSMI3UFBUTIYWD6BPOKPZV3)
+
+
 
 **User Actions Tracked**:
 - Wallet connections: 5+ unique testnet addresses
