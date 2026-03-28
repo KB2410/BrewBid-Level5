@@ -30,6 +30,8 @@ coverage.json
 .nyc_output/
 typechain/
 typechain-types/
+test-output.txt
+**/test-output.txt
 
 # Hardhat
 cache/
