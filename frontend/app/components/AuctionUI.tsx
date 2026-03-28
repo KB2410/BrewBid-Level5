@@ -147,6 +147,8 @@ export default function AuctionUI() {
     highestBid: 0,
     endTime: 0,
     userRefund: 0,
+    currentYield: 0,
+    accumulatedInterest: 0,
   });
 
   // Helper to extract signed XDR safely
@@ -477,6 +479,47 @@ export default function AuctionUI() {
             }));
         }
       }
+
+      // NEW: Fetch yield-generation data
+      // Get current yield preview
+      const getYieldTx = new TransactionBuilder(dummyAccount, {
+        fee: "100",
+        networkPassphrase: NETWORK_PASSPHRASE,
+      })
+        .addOperation(contract.call("preview_current_yield"))
+        .setTimeout(TimeoutInfinite)
+        .build();
+      const yieldSim = await server.simulateTransaction(getYieldTx);
+      if (yieldSim && rpc.Api.isSimulationSuccess(yieldSim)) {
+        const currentYield = extractScValValue(yieldSim.result?.retval);
+        if (currentYield !== null) {
+          const yieldValue = typeof currentYield === 'bigint' ? Number(currentYield) : Number(currentYield);
+          setAuctionData((prev) => ({
+            ...prev,
+            currentYield: yieldValue / 10000000,
+          }));
+        }
+      }
+
+      // Get accumulated interest
+      const getInterestTx = new TransactionBuilder(dummyAccount, {
+        fee: "100",
+        networkPassphrase: NETWORK_PASSPHRASE,
+      })
+        .addOperation(contract.call("get_accumulated_interest"))
+        .setTimeout(TimeoutInfinite)
+        .build();
+      const interestSim = await server.simulateTransaction(getInterestTx);
+      if (interestSim && rpc.Api.isSimulationSuccess(interestSim)) {
+        const accumulatedInterest = extractScValValue(interestSim.result?.retval);
+        if (accumulatedInterest !== null) {
+          const interestValue = typeof accumulatedInterest === 'bigint' ? Number(accumulatedInterest) : Number(accumulatedInterest);
+          setAuctionData((prev) => ({
+            ...prev,
+            accumulatedInterest: interestValue / 10000000,
+          }));
+        }
+      }
     } catch (e) {
       console.error("Error fetching auction details:", e);
     }
@@ -562,9 +605,16 @@ export default function AuctionUI() {
             {/* Hero Auction Card */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-sm font-medium mb-4">
-                  <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
-                  Live Auction
+                <div className="flex items-center gap-3 mb-4 flex-wrap">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
+                    <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
+                    Live Auction
+                  </div>
+                  {/* NEW: Yield-Generating Badge */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-sm font-medium shadow-lg">
+                    <span>💰</span>
+                    <span>Yield-Generating</span>
+                  </div>
                 </div>
                 <h2 className="text-4xl font-bold mb-2">
                   {itemName}
@@ -575,7 +625,7 @@ export default function AuctionUI() {
               </div>
               
               <div className="p-6">
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-3 gap-6">
                   <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
                     <p className="text-sm font-medium text-blue-700 mb-2">Current Bid</p>
                     <div className="flex items-baseline gap-2">
@@ -594,6 +644,24 @@ export default function AuctionUI() {
                     {status === "ended" && (
                       <p className="text-sm text-red-600 font-medium mt-2">Auction has ended</p>
                     )}
+                  </div>
+
+                  {/* NEW: Yield Generated Card */}
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-lg p-6 border border-green-200">
+                    <p className="text-sm font-medium text-green-700 mb-2 flex items-center gap-1">
+                      <span></span>
+                      <span>Yield Generated</span>
+                    </p>
+                    <div className="flex flex-col mb-2">
+                      <span className="text-3xl font-bold text-gray-900">
+                        {(auctionData.currentYield + auctionData.accumulatedInterest).toFixed(5)}
+                      </span>
+                     <span className="text-sm font-semibold text-green-600 mt-1">XLM</span>
+                    </div>
+                    <p className="text-xs text-green-700 mt-2 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                      <span>Seller bonus</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -698,6 +766,26 @@ export default function AuctionUI() {
                   </p>
                 )}
               </div>
+
+              {/* NEW: Principal Protection Message */}
+              {walletAddress && auctionData.userRefund === 0 && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span>🛡️</span>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-1">
+                        Your Bid is Protected
+                      </h4>
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        If outbid, you'll receive your <strong>full principal back</strong>. 
+                        The yield goes to the seller as additional revenue.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Refund Card */}
               {auctionData.userRefund > 0 && (

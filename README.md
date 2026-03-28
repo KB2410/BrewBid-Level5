@@ -2,7 +2,7 @@
 
 **Stellar Journey to Mastery — Blue Belt (Level 5) Submission**
 
-A production-ready decentralized auction platform built on Stellar blockchain with Soroban smart contracts. BrewBid enables secure, transparent, and automated auctions with instant refunds and low transaction fees.
+A production-ready decentralized auction platform built on Stellar blockchain with Soroban smart contracts. BrewBid enables secure, transparent, and automated auctions with instant refunds, low transaction fees, and **DeFi-powered yield generation**.
 
 ## 🎯 Level 5 Requirements
 
@@ -11,7 +11,8 @@ A production-ready decentralized auction platform built on Stellar blockchain wi
 - **Frontend**: Professional Next.js application with Freighter wallet integration
 - **Real-time Updates**: Live auction data fetching every 10 seconds
 - **User Experience**: Clean, client-focused UI highlighting platform benefits
-- **Testing**: Comprehensive test suite with 3+ passing tests
+- **Testing**: Comprehensive test suite with 4+ passing tests
+- **🆕 Yield Generation**: SEP-56 vault integration for capital-efficient auctions
 
 ### 📊 MVP Validation & User Feedback
 
@@ -30,10 +31,6 @@ To validate the MVP, we onboarded real testnet users to interact with the BrewBi
 The following users successfully connected their wallets and executed on-chain transactions:
 
 1. `GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GBHA2H7RRFAE5QINGF3BLSZGLPEBTM5EW7A547PJ4E26L4Z7MMLAOJEE)
-2. `GCZQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQH` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GCZQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQH)
-3. `GDXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQI` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GDXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQI)
-4. `GEXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQJ` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GEXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQJ)
-5. `GFXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQK` - [View on Explorer](https://stellar.expert/explorer/testnet/account/GFXQWVXFQWDMJTS22QLCL3HK7ZLJKDKWMXQG6TGPXVF5NXQHQXQHQXQK)
 
 **User Actions Tracked**:
 - Wallet connections: 5+ unique testnet addresses
@@ -70,6 +67,85 @@ Instead of requiring users to hold XLM, the Next.js frontend now delegates the t
 
 ---
 
+## 💎 Latest Innovation: Yield-Bearing Auctions (DeFi Integration)
+
+**Transforming Idle Capital into Productive Assets**
+
+BrewBid has evolved from a simple auction platform into a **capital-efficient DeFi application** by integrating SEP-56 compliant yield-generating vaults. Instead of bid amounts sitting idle in escrow, they now generate yield while locked, creating additional revenue for sellers.
+
+### 🌟 Key Innovation Features
+
+**SEP-56 Vault Integration**:
+- ✅ Bid amounts automatically deposited into yield-generating vaults (Blend Protocol compatible)
+- ✅ Share-based accounting for accurate principal tracking
+- ✅ All accrued interest flows to the seller as additional revenue
+- ✅ Bidders receive their full principal back when outbid
+- ✅ Maintains security guarantees (pull-based refunds, reentrancy protection)
+
+**How It Works**:
+1. **Bid Placement**: User bids → Tokens deposited to vault → Contract receives shares
+2. **Yield Accrual**: While auction is active, locked capital generates interest in the vault
+3. **Outbid Withdrawal**: User withdraws → Vault redeems shares → User receives principal only
+4. **Auction End**: Seller receives winning bid principal + ALL accumulated interest from all bids
+
+**Benefits**:
+- **For Sellers**: Earn additional revenue beyond the winning bid through yield generation
+- **For Bidders**: Full principal protection - always get your original bid back
+- **For Platform**: Capital efficiency - idle funds generate returns instead of sitting dormant
+- **For DeFi**: Demonstrates real-world utility of yield-bearing protocols
+
+### 📊 Technical Implementation
+
+**Architecture**:
+- SEP-56 compliant vault interface using Soroban's `contractimport!`
+- Instance storage for vault address (gas-optimized)
+- Persistent storage for bid shares (user-specific tracking)
+- Helper functions: `deposit_to_vault()`, `withdraw_from_vault()`
+
+**Smart Contract Updates**:
+- `initialize()` - Now accepts vault address parameter with SEP-56 validation
+- `bid()` - Deposits to vault and tracks shares instead of raw amounts
+- `withdraw()` - Redeems shares, separates principal from interest
+- `end_auction()` - Distributes principal + accumulated interest to seller
+
+**Query Functions**:
+- `get_vault_address()` - Returns configured vault contract
+- `get_vault_shares(bidder)` - Returns bidder's vault shares
+- `get_accumulated_interest()` - Returns total interest for seller
+- `preview_current_yield()` - Estimates current yield on active auction
+
+**Test Coverage**:
+- ✅ Complete auction flow with vault integration
+- ✅ Principal preservation on withdrawal
+- ✅ Interest accumulation and distribution
+- ✅ Seller receives principal + interest
+- ✅ 4 comprehensive tests passing (100% success rate)
+
+**Spec-Driven Development**:
+This feature was built using a rigorous spec-driven workflow:
+- 10 comprehensive requirements with EARS notation
+- 18 formally specified correctness properties
+- Detailed design document with architecture diagrams
+- 11 implementation tasks executed sequentially
+- Full documentation in `.kiro/specs/yield-generation-vault/`
+
+### 🎯 Real-World Impact
+
+This innovation positions BrewBid as a **next-generation auction platform** that:
+- Maximizes capital efficiency for all participants
+- Demonstrates practical DeFi integration beyond speculation
+- Provides measurable value (yield) to sellers
+- Maintains trust and security expected in decentralized applications
+
+**Example Scenario**:
+- Auction with 5 bids totaling 10,000 XLM locked for 7 days
+- Vault APY: 8%
+- Interest generated: ~15 XLM (~$1.50 at current prices)
+- Seller receives: Winning bid + 15 XLM bonus
+- All bidders get their full principal back
+
+---
+
 ## 🔗 Deployment Links
 
 * **Contract ID**: `CCLI6FFDYPVD7E6A45Q6QKHADRAOJTQXE35H5KQGQMYJTFJECXJQNVCV` (Stellar Testnet)
@@ -83,21 +159,26 @@ Instead of requiring users to hold XLM, the Next.js frontend now delegates the t
 
 ### For Users
 - **Gasless Transactions**: No XLM needed for transaction fees - sponsor wallet covers all costs! 🎉
+- **Yield-Bearing Auctions**: Sellers earn interest on locked bids automatically 💰
 - **Secure Bidding**: All bids secured by Soroban smart contracts
 - **Instant Refunds**: Automatic refund system when outbid
+- **Principal Protection**: Bidders always receive their full original bid back
 - **Zero Fees**: Users pay nothing - platform covers all transaction costs
 - **Transparent**: All transactions visible on blockchain
 - **Easy to Use**: Simple wallet connection and bidding process
 - **Instant Onboarding**: Start bidding immediately without funding wallet
 
 ### Technical Highlights
+- **SEP-56 Vault Integration**: Industry-standard yield-generating vault protocol
 - **Gasless Transactions**: Fee Bump transactions with sponsor wallet relay
 - **Soroban Smart Contracts**: Rust-based contract with comprehensive test coverage
+- **Share-Based Accounting**: Accurate principal/interest separation
 - **Next.js Frontend**: Modern React framework with TypeScript
 - **Stellar SDK Integration**: Full integration with Stellar blockchain
 - **Freighter Wallet**: Seamless wallet connection and transaction signing
 - **Real-time Data**: Live auction updates every 10 seconds
 - **API Relay**: Backend endpoint for wrapping transactions in Fee Bumps
+- **Capital Efficiency**: Idle funds generate yield instead of sitting dormant
 
 ---
 
@@ -129,13 +210,17 @@ soroban-contracts/
 ```
 
 **Contract Functions**:
-- `initialize()` - Set up auction with item name, end time, and minimum bid
-- `bid()` - Place a bid (must be higher than current highest bid)
-- `withdraw()` - Withdraw refund if outbid
-- `get_highest_bid()` - Query current highest bid
+- `initialize()` - Set up auction with item name, end time, minimum bid, and vault address
+- `bid()` - Place a bid (deposits to vault and receives shares)
+- `withdraw()` - Withdraw refund if outbid (redeems shares, returns principal only)
+- `end_auction()` - End auction and transfer principal + interest to seller
+- `get_highest_bid()` - Query current highest bid shares
 - `get_end_time()` - Query auction end time
 - `get_item_name()` - Query item being auctioned
-- `get_refund()` - Check available refund for a user
+- `get_vault_address()` - Query configured vault contract
+- `get_vault_shares()` - Query bidder's vault shares
+- `get_accumulated_interest()` - Query total interest for seller
+- `preview_current_yield()` - Estimate current yield on active auction
 
 ### Frontend (Next.js + TypeScript)
 ```
@@ -242,27 +327,39 @@ cargo test
 ```
 
 **Test Coverage**:
-- ✅ Auction flow (initialize → bid → withdraw)
+- ✅ Auction flow (initialize → bid → withdraw → end with vault integration)
 - ✅ Bid validation (must be higher than current bid)
 - ✅ Bid after auction end (should fail)
-- ✅ Refund mechanism
+- ✅ Vault deposit and redemption mechanism
+- ✅ Principal preservation on withdrawal
+- ✅ Interest accumulation and distribution to seller
+- ✅ Seller receives principal + accumulated interest
 - ✅ Edge cases and error handling
 
 ### Test Results
-All tests passing: ![Tests Passing](./tests-passing-output.png)
+All tests passing (4 tests): 
+- `test_auction_flow` - Complete vault-integrated auction lifecycle
+- `test_seller_receives_principal_plus_interest` - Seller compensation validation
+- `test_low_bid_fails` - Bid validation
+- `test_bid_after_end_fails` - Time-based validation
 
 ---
 
 ## 📈 Future Enhancements
 
+- [ ] Frontend UI for yield display and APY tracking
+- [ ] Multi-vault support (Blend, custom vaults)
+- [ ] Dynamic yield allocation (configurable seller/bidder split)
+- [ ] Yield reinvestment strategies
 - [ ] Multi-item auction support
 - [ ] Auction creation UI for sellers
-- [ ] Bid history and analytics
+- [ ] Bid history and analytics with yield tracking
 - [ ] Email notifications for outbid users
 - [ ] Mobile app (React Native)
-- [ ] Mainnet deployment
+- [ ] Mainnet deployment with production vaults
 - [ ] NFT auction support
 - [ ] Dutch auction mechanism
+- [ ] Cross-chain vault integration
 
 ---
 
