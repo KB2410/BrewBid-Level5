@@ -11,11 +11,13 @@ BrewBid is a high-performance decentralized auction platform that eliminates Web
 
 ## 📦 Submission Evidence (Quick Links)
 
+**Live Demo** [https://frontend-chi-wheat-42.vercel.app](https://frontend-chi-wheat-42.vercel.app)
 
- **Live Demo**  [https://frontend-chi-wheat-42.vercel.app](https://frontend-chi-wheat-42.vercel.app) 
- **Demo Video**  [Watch Full MVP Functionality](https://drive.google.com/file/d/1QsBW0Hxyw3PyEQDZPJbOWiHlDuN90RTV/view?usp=sharing) 
- **User Feedback**  [Structured Feedback Spreadsheet](https://docs.google.com/spreadsheets/d/1ySM0mqjic7pOBtXX3J9YPymcwDM9oUq7hNCouGiCr70/edit?usp=sharing) 
- **Contract ID** `CCYN4CDGV2XMCCC5BZM5RNUFHGKMXJOGMCMB5B2665VU36PDQEU3SDEZ` 
+**Demo Video** [Watch Full MVP Functionality](https://drive.google.com/file/d/1QsBW0Hxyw3PyEQDZPJbOWiHlDuN90RTV/view?usp=sharing)
+
+**User Feedback** [Structured Feedback Spreadsheet](https://docs.google.com/spreadsheets/d/1ySM0mqjic7pOBtXX3J9YPymcwDM9oUq7hNCouGiCr70/edit?usp=sharing)
+
+**Contract ID** `CCYN4CDGV2XMCCC5BZM5RNUFHGKMXJOGMCMB5B2665VU36PDQEU3SDEZ` 
 
 ### 👥 Verified Testnet Bidders (On-Chain Validation)
 
